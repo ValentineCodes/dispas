@@ -18,6 +18,8 @@ type Props = {
   onClose: (recipient: `0x${string}`) => void;
   onChange: (recipient: `0x${string}`, amount: string) => void;
   fetchNativeCurrency: () => void;
+  change?: string;
+  onGiftChange?: (recipient: `0x${string}`) => void;
 };
 
 export default function Payment({
@@ -27,6 +29,8 @@ export default function Payment({
   onClose,
   onChange,
   fetchNativeCurrency,
+  change,
+  onGiftChange,
 }: Props) {
   const [showInput, setShowInput] = useState(true);
   const [nativeValue, setNativeValue] = useState(payment.amount);
@@ -163,6 +167,15 @@ export default function Payment({
         >
           {payment.amount} LYX
         </span>
+      )}
+
+      {change && Number(change) > 0 && onGiftChange && (
+        <button
+          onClick={() => onGiftChange(payment.recipient)}
+          className="bg-gray-500 text-white hover:bg-white px-4 py-2 hover:text-gray-500 border hover:border-gray-500 rounded-lg font-light duration-200 mt-4 text-sm flex justify-center items-center"
+        >
+          Gift change
+        </button>
       )}
     </div>
   );

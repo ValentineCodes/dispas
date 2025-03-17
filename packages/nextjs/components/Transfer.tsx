@@ -15,6 +15,7 @@ import { useCryptoPrice } from "~~/hooks/scaffold-eth/useCryptoPrice";
 export default function Transfer() {
   const [totalNativeValue, setTotalNativeValue] = useState("");
   const [totalDollarValue, setTotalDollarValue] = useState("");
+  const [change, setChange] = useState("");
   const [isDollar, setIsDollar] = useState(false); // Toggle USD/LYX
   const [isSending, setIsSending] = useState(false);
 
@@ -134,14 +135,16 @@ export default function Transfer() {
 
   const sumPayments = (): bigint => payments.reduce((sum, p) => sum + (parseEther(p.amount) || -1n), 0n);
 
-  const isSharedEqually = (): boolean =>
+  const isSplit = (): boolean =>
     totalNativeValue === "" || payments.length === 0 || parseEther(totalNativeValue) === sumPayments();
 
-  const shareEqually = () => {
-    if (payments.length === 0 || Number(totalNativeValue) === 0 || isSharedEqually()) return;
+  const split = () => {
+    if (payments.length === 0 || Number(totalNativeValue) === 0 || isSplit()) return;
 
     const total = parseEther(totalNativeValue);
     const share = total / BigInt(payments.length);
+    const newTotal = share * BigInt(payments.length);
+    const changeAmount = total - newTotal;
 
     setPayments(prevPayments =>
       prevPayments.map(payment => ({
@@ -150,20 +153,29 @@ export default function Transfer() {
       })),
     );
 
-    const newTotal = share * BigInt(payments.length);
-
     setTotalNativeValue(formatEther(newTotal));
+    setChange(formatEther(changeAmount));
 
     if (nativeCurrencyPrice) {
       setTotalDollarValue((Number(formatEther(newTotal)) * nativeCurrencyPrice).toFixed(2));
     }
 
-    if (total !== newTotal) {
+    if (changeAmount > 0n) {
       toaster.create({
-        title: "Total amount has been adjusted for precision",
+        title: "You've got some change",
         type: "warning",
       });
     }
+  };
+
+  const giftChange = (_recipient: `0x${string}`) => {
+    if (!change || Number(change) === 0) return;
+
+    const recipient = payments.find(p => p.recipient === _recipient);
+
+    const newAmount = parseEther(recipient?.amount || "0") + parseEther(change);
+    addRecipientAmount(_recipient, formatEther(newAmount));
+    setChange("");
   };
 
   const { data: dispas } = useDeployedContractInfo("Dispas");
@@ -198,7 +210,7 @@ export default function Transfer() {
     }
 
     // Ensure total of payments matches the inputted amount
-    if (!isSharedEqually()) {
+    if (!isSplit()) {
       toaster.create({
         title: "Total amount does not match sum of payments!",
         type: "error",
@@ -313,13 +325,15 @@ export default function Transfer() {
           </Button>
 
           <Button
-            onClick={shareEqually}
+            onClick={split}
             className="cursor-pointer bg-gray-500 text-white hover:bg-white hover:text-gray-500 border hover:border-gray-500 w-10 aspect-square flex justify-center items-center rounded-full p-2 duration-200"
-            disabled={isSharedEqually()}
+            disabled={isSplit()}
           >
             <FaShareAlt />
           </Button>
         </HStack>
+
+        {change && Number(change) > 0 && <p>Change: {parseEther(change).toString()} WEI</p>}
       </div>
 
       <div className="flex-1 flex flex-col items-center py-4 bg-gray-100 shadow-inner rounded-b-3xl">
@@ -339,6 +353,8 @@ export default function Transfer() {
                 onClose={removePayment}
                 onChange={addRecipientAmount}
                 fetchNativeCurrency={fetchNativeCurrency}
+                change={change}
+                onGiftChange={giftChange}
               />
             ))
           )}
