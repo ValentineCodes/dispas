@@ -4,10 +4,12 @@ import Payment, { PaymentType } from "./Payment";
 import Profile from "./Profile";
 import ProfilePlaceholder from "./ProfilePlaceholder";
 import { ProfileSearch } from "./ProfileSearch";
-import { Button, HStack, Input } from "@chakra-ui/react";
-import { FaChevronDown, FaDollarSign, FaShareAlt } from "react-icons/fa";
+import AssetsModal from "./modals/AssetsModal";
+import { Button, Input } from "@chakra-ui/react";
+import { FaChevronDown, FaDollarSign } from "react-icons/fa";
 import { formatEther, parseEther } from "viem";
 import { useAccount, useSendTransaction, useWriteContract } from "wagmi";
+import { DialogContent, DialogRoot, DialogTrigger } from "~~/components/ui/dialog";
 import { Toaster, toaster } from "~~/components/ui/toaster";
 import { useDeployedContractInfo, useTransactor, useWatchBalance } from "~~/hooks/scaffold-eth";
 import { useCryptoPrice } from "~~/hooks/scaffold-eth/useCryptoPrice";
@@ -299,11 +301,19 @@ export default function Transfer() {
         </div>
 
         <div className="w-full h-full">
-          <div className="border-2 border-gray-100 rounded-tr-xl w-full h-2/4 flex justify-between items-center px-4 duration-200 hover:border-gray-400 cursor-pointer">
-            <strong className="font-bold text-sm">LUKSO</strong>
+          <DialogRoot placement="center" motionPreset="slide-in-bottom">
+            <DialogTrigger asChild>
+              <div className="border-2 border-gray-100 rounded-tr-xl w-full h-2/4 flex justify-between items-center px-4 duration-200 hover:border-gray-400 cursor-pointer">
+                <strong className="font-bold text-sm">LUKSO</strong>
 
-            <FaChevronDown className="text-gray-400" />
-          </div>
+                <FaChevronDown className="text-gray-400" />
+              </div>
+            </DialogTrigger>
+
+            <DialogContent className="w-full max-w-[350px] rounded-xl">
+              <AssetsModal />
+            </DialogContent>
+          </DialogRoot>
           <div className="w-full h-2/4 flex items-center">
             <Input
               placeholder="0"
