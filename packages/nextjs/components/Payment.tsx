@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Profile from "./Profile";
+import RecipientProfile from "./RecipientProfile";
 import { toaster } from "./ui/toaster";
 import { Button, Input } from "@chakra-ui/react";
-import { GrStatusGood } from "react-icons/gr";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
 export interface PaymentType {
@@ -119,7 +118,7 @@ export default function Payment({
         className="absolute top-[-5px] right-5 text-lg cursor-pointer duration-200 text-gray-600 hover:text-red-400"
         onClick={() => onClose(payment.recipient)}
       />
-      <Profile address={payment.recipient} showName />
+      <RecipientProfile address={payment.recipient} showName />
 
       <div className="flex flex-col items-center">
         <div className="flex items-center border border-gray-200 bg-white rounded-lg">

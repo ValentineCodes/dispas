@@ -280,13 +280,8 @@ export default function Transfer() {
 
   return (
     <div className="shadow-[0_3px_10px_rgb(0,0,0,0.2)] w-full max-w-[450px] mx-4 rounded-3xl flex flex-col">
+      <Profile address={account.address as `0x${string}`} />
       <div className="flex flex-1 flex-col justify-center items-center border-b rounded-t-3xl py-4">
-        {account.isConnected && account.address ? (
-          <Profile address={account.address as `0x${string}`} />
-        ) : (
-          <ProfilePlaceholder />
-        )}
-
         <div className="flex justify-center items-center text-3xl w-full max-w-[90%] overflow-hidden text-ellipsis text-black whitespace-nowrap">
           {isDollar && totalNativeValue && <span className="text-2xl mr-[-5px]">$</span>}
           <Input
@@ -347,7 +342,9 @@ export default function Transfer() {
           className="flex flex-1 max-w-full items-center overflow-x-auto space-x-2 py-4 px-2 no-scrollbar"
         >
           {payments.length === 0 ? (
-            <ProfilePlaceholder />
+            <div className="w-[4.3rem]">
+              <ProfilePlaceholder showName />
+            </div>
           ) : (
             payments.map(payment => (
               <Payment
