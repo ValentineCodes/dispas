@@ -90,7 +90,7 @@ export default function Profile({ address }: Props) {
   }, [address, profile]);
 
   return (
-    <div className="bg-cyan-300 w-full h-28 rounded-t-3xl relative flex flex-col items-center">
+    <div className="bg-gray-500 w-full h-28 rounded-t-3xl relative flex flex-col items-center">
       {renderProfileCover()}
 
       {/* Profile image */}

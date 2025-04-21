@@ -5,7 +5,7 @@ import Profile from "./Profile";
 import ProfilePlaceholder from "./ProfilePlaceholder";
 import { ProfileSearch } from "./ProfileSearch";
 import { Button, HStack, Input } from "@chakra-ui/react";
-import { FaDollarSign, FaShareAlt } from "react-icons/fa";
+import { FaChevronDown, FaDollarSign, FaShareAlt } from "react-icons/fa";
 import { formatEther, parseEther } from "viem";
 import { useAccount, useSendTransaction, useWriteContract } from "wagmi";
 import { Toaster, toaster } from "~~/components/ui/toaster";
@@ -281,39 +281,12 @@ export default function Transfer() {
   return (
     <div className="shadow-[0_3px_10px_rgb(0,0,0,0.2)] w-full max-w-[450px] mx-4 rounded-3xl flex flex-col">
       <Profile address={account.address as `0x${string}`} />
-      <div className="flex flex-1 flex-col justify-center items-center border-b rounded-t-3xl py-4">
-        <div className="flex justify-center items-center text-3xl w-full max-w-[90%] overflow-hidden text-ellipsis text-black whitespace-nowrap">
-          {isDollar && totalNativeValue && <span className="text-2xl mr-[-5px]">$</span>}
-          <Input
-            placeholder="How much?"
-            className="h-16 text-center outline-none"
-            value={displayTotalValue}
-            onChange={e => handleInput(e.target.value)}
-            required
-            width={`${Math.max(displayTotalValue.length, 1)}ch`}
-            style={{ minWidth: displayTotalValue.length === 0 ? 200 : 0 }}
-          />
-          {!isDollar && totalNativeValue && <span className="text-2xl">LYX</span>}
-        </div>
 
-        <strong
-          className="text-md font-semibold italic text-gray-500 mt-[-10px]"
-          style={
-            isBalanceInsufficient
-              ? errorStyle
-              : {
-                  opacity: totalNativeValue && totalDollarValue ? 1 : 0,
-                }
-          }
-        >
-          ~{!isDollar && "$"}
-          {displayConversion} {isDollar && "LYX"}
-        </strong>
-
-        <HStack className="mt-4">
+      <div className="rounded-xl h-24 w-[90%] self-center mt-14 mb-6 flex">
+        <div className="border-l-2 border-y-2 border-gray-100 p-4 flex items-center justify-center">
           <Button
             onClick={switchCurrency}
-            className="border border-gray-300 w-10 aspect-square flex justify-center items-center rounded-full p-2 transition-transform duration-200 ease-in-out group hover:scale-110"
+            className="shadow-[0_3px_10px_rgb(0,0,0,0.2)] w-10 aspect-square flex justify-center items-center rounded-full p-2 transition-transform duration-200 ease-in-out group hover:scale-110"
           >
             {isDollar ? (
               <FaDollarSign className="text-green-400 group-hover:scale-110 transition-transform duration-200 ease-in-out" />
@@ -323,18 +296,51 @@ export default function Transfer() {
               </div>
             )}
           </Button>
+        </div>
 
-          <Button
-            onClick={split}
-            className="cursor-pointer bg-gray-500 text-white hover:bg-white hover:text-gray-500 border hover:border-gray-500 w-10 aspect-square flex justify-center items-center rounded-full p-2 duration-200"
-            disabled={isSplit()}
-          >
-            <FaShareAlt />
-          </Button>
-        </HStack>
+        <div className="w-full h-full">
+          <div className="border-2 border-gray-100 rounded-tr-xl w-full h-2/4 flex justify-between items-center px-4 duration-200 hover:border-gray-400 cursor-pointer">
+            <strong className="font-bold text-sm">LUKSO</strong>
 
-        {change && Number(change) > 0 && <p>Change: {parseEther(change).toString()} WEI</p>}
+            <FaChevronDown className="text-gray-400" />
+          </div>
+          <div className="w-full h-2/4 flex items-center">
+            <Input
+              placeholder="0"
+              className="h-full outline-none px-4 border-l-2 border-b-2 rounded-none border-gray-100 "
+              value={displayTotalValue}
+              onChange={e => handleInput(e.target.value)}
+              required
+            />
+
+            <Button
+              onClick={split}
+              className="bg-gray-700 text-white hover:bg-white hover:text-gray-700 border hover:border-gray-700 h-full w-2/4 aspect-square flex justify-center items-center px-4 py-2 duration-200 rounded-br-xl"
+            >
+              Split funds
+            </Button>
+          </div>
+        </div>
       </div>
+      <strong
+        className="text-md font-semibold italic text-gray-500 mt-[-10px] ml-[5%]"
+        style={
+          isBalanceInsufficient
+            ? errorStyle
+            : {
+                opacity: totalNativeValue && totalDollarValue ? 1 : 0,
+              }
+        }
+      >
+        ~{!isDollar && "$"}
+        {displayConversion} {isDollar && "LYX"}
+      </strong>
+
+      {change && Number(change) > 0 && (
+        <p className="text-black ml-[5%]">
+          Change: <strong>{parseEther(change).toString()} WEI</strong>
+        </p>
+      )}
 
       <div className="flex-1 flex flex-col items-center py-4 bg-gray-100 shadow-inner rounded-b-3xl">
         <div
