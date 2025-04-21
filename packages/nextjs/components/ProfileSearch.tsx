@@ -739,7 +739,7 @@ export function ProfileSearch({ onSelectAddress }: SearchProps) {
       >
         <Input
           type="text"
-          placeholder="Enter address of recipient"
+          placeholder="Enter name or address of recipient"
           className="pl-4 text-sm text-black rounded-xl h-12"
           value={query}
           onChange={handleInput}
