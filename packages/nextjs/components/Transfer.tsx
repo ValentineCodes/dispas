@@ -332,25 +332,28 @@ export default function Transfer() {
           </div>
         </div>
       </div>
-      <strong
-        className="text-md font-semibold italic text-gray-500 mt-[-10px] ml-[5%]"
-        style={
-          isBalanceInsufficient
-            ? errorStyle
-            : {
-                opacity: totalNativeValue && totalDollarValue ? 1 : 0,
-              }
-        }
-      >
-        ~{!isDollar && "$"}
-        {displayConversion} {isDollar && "LYX"}
-      </strong>
 
-      {change && Number(change) > 0 && (
-        <p className="text-black ml-[5%]">
-          Change: <strong>{parseEther(change).toString()} WEI</strong>
-        </p>
-      )}
+      <div className="flex justify-between items-center mx-[5%]">
+        <strong
+          className="text-md font-semibold italic text-gray-500"
+          style={
+            isBalanceInsufficient
+              ? errorStyle
+              : {
+                  opacity: totalNativeValue && totalDollarValue ? 1 : 0,
+                }
+          }
+        >
+          ~{!isDollar && "$"}
+          {displayConversion} {isDollar && "LYX"}
+        </strong>
+
+        {change && Number(change) > 0 && (
+          <p className="text-black">
+            Change: <strong className="text-green-500 font-bold">{parseEther(change).toString()} WEI</strong>
+          </p>
+        )}
+      </div>
 
       <div className="flex-1 flex flex-col items-center py-4 bg-gray-100 shadow-inner rounded-b-3xl">
         <div
