@@ -169,7 +169,7 @@ export default function Transfer() {
 
     if (changeAmount > 0n) {
       toaster.create({
-        title: "You've got some change",
+        title: `You've got ${changeAmount} WEI in change. You can gift it to someone`,
         type: "warning",
       });
     }
