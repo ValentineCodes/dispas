@@ -24,7 +24,7 @@ export default function Transfer() {
   const [payments, setPayments] = useState<PaymentType[]>([]);
 
   const account = useAccount();
-  const { data: balance } = useWatchBalance({ address: account.address });
+  const { data: balance, refetch: refetchBalance } = useWatchBalance({ address: account.address });
   const {
     price: nativeCurrencyPrice,
     loading: isFetchingNativeCurrency,
@@ -206,6 +206,14 @@ export default function Transfer() {
     if (totalNativeValue === "" || Number(totalNativeValue) === 0) {
       toaster.create({
         title: "Please input a valid total amount!",
+        type: "error",
+      });
+      return;
+    }
+
+    if (!balance || balance.value < parseEther(totalNativeValue)) {
+      toaster.create({
+        title: "Insufficient balance",
         type: "error",
       });
       return;
