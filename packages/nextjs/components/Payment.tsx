@@ -4,6 +4,7 @@ import RecipientProfile from "./RecipientProfile";
 import { toaster } from "./ui/toaster";
 import { Button, Input } from "@chakra-ui/react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { parseEther } from "viem";
 
 export interface PaymentType {
   recipient: `0x${string}`;
@@ -146,9 +147,9 @@ export default function Payment({
       {change && Number(change) > 0 && onGiftChange && (
         <button
           onClick={() => onGiftChange(payment.recipient)}
-          className="bg-gray-500 text-white hover:bg-white px-4 py-2 hover:text-gray-500 border hover:border-gray-500 rounded-lg font-light duration-200 mt-4 text-sm flex justify-center items-center"
+          className="bg-gray-700 text-white hover:bg-white px-4 py-2 hover:text-gray-500 border hover:border-gray-500 rounded-lg font-light duration-200 mt-4 text-sm flex justify-center items-center"
         >
-          Gift change
+          Gift <strong className="text-green-500 font-bold ml-1">{parseEther(change).toString()} WEI</strong>
         </button>
       )}
     </div>

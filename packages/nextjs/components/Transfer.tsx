@@ -146,7 +146,7 @@ export default function Transfer() {
     totalNativeValue === "" || payments.length === 0 || parseEther(totalNativeValue) === sumPayments();
 
   const split = () => {
-    if (payments.length === 0 || Number(totalNativeValue) === 0 || isSplit()) return;
+    if (payments.length === 0 || Number(totalNativeValue) === 0) return;
 
     const total = parseEther(totalNativeValue);
     const share = total / BigInt(payments.length);
@@ -166,6 +166,11 @@ export default function Transfer() {
     if (nativeCurrencyPrice) {
       setTotalDollarValue((Number(formatEther(newTotal)) * nativeCurrencyPrice).toFixed(2));
     }
+
+    toaster.create({
+      title: "Your funds have been split equally between recipients",
+      type: "info",
+    });
 
     if (changeAmount > 0n) {
       toaster.create({
@@ -385,11 +390,11 @@ export default function Transfer() {
 
         <button
           onClick={send}
-          className="bg-gray-500 text-white hover:bg-white px-8 py-2 hover:text-gray-500 border hover:border-gray-500 rounded-xl font-light duration-200 mt-4 text-sm h-12 w-[85%] flex justify-center items-center"
+          className="bg-gray-700 text-white hover:bg-white px-8 py-2 hover:text-gray-700 border hover:border-gray-700 rounded-xl font-light duration-200 mt-4 text-sm h-12 w-[85%] flex justify-center items-center"
           disabled={isSending}
         >
           {isSending ? (
-            <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
+            <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-700 rounded-full animate-spin"></div>
           ) : (
             <span className="font-extrabold">{payments.length > 1 ? "Distribute" : "Send"}</span>
           )}
